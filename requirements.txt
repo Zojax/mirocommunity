@@ -42,3 +42,4 @@ xapian-haystack
 -e hg+https://bitbucket.org/paulswartz/django-storages#egg=django-storages
 django-voting
 eventlet
+-e git+http://github.com/pelletier/SOAPpy.git@develop#egg=SOAPpy
