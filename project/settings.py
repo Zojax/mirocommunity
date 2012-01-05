@@ -47,6 +47,8 @@ MEDIA_URL = '/'
 # Examples: "http://foo.com/media/", "/media/".
 ADMIN_MEDIA_PREFIX = '/media/'
 
+STATIC_URL = '/'
+
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = ''
 
@@ -69,7 +71,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     )
 
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF = 'project.urls'
 
 UPLOADTEMPLATE_MEDIA_ROOT = MEDIA_ROOT + 'uploadtemplate'
 UPLOADTEMPLATE_MEDIA_URL = MEDIA_URL + 'uploadtemplate'
@@ -111,6 +113,7 @@ INSTALLED_APPS = (
     'socialauth',
     'openid_consumer',
     'paypal',
+    'caspio_source'
 )
 
 try:
@@ -200,7 +203,7 @@ CELERY_BACKEND = 'cache' # this MUST be set, otherwise the import page won't be
                          # able to figure out if the task has ended
 
 # haystack search
-HAYSTACK_SITECONF = 'example_project.search_sites'
+HAYSTACK_SITECONF = 'project.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'whoosh'
 HAYSTACK_WHOOSH_PATH = 'whoosh_index'
 
@@ -214,4 +217,6 @@ FACEBOOK_CONNECT_DOMAIN = None
 # Twitter options
 TWITTER_CONSUMER_KEY = None
 TWITTER_CONSUMER_SECRET = None
+PAYPAL_RECEIVER_EMAIL = 'paypal@some.com'
 
+from local_settings import *
