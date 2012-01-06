@@ -1,13 +1,20 @@
 from django.db import models
 
 from localtv.models import *
+from SOAPpy import WSDL
 
 CASPIO_SOURCE_STATUS_UNAPPROVED = VIDEO_STATUS_UNAPPROVED
 CASPIO_SOURCE_STATUS_ACTIVE = VIDEO_STATUS_ACTIVE
 CASPIO_SOURCE_STATUS_REJECTED = VIDEO_STATUS_REJECTED
 CASPIO_SOURCE_STATUS_PENDING_THUMBNAIL = VIDEO_STATUS_PENDING_THUMBNAIL
 
+ACCOUNT_ID ='account id'
+PROFILEID = 'profile'
+PASSWORD='acc password'
+
 CASPIO_SOURCE_STATUSES=VIDEO_STATUSES
+
+WSDL_URL="http://bridge.caspio.net/ws/API.asmx?wsdl"
  
 class CaspioSource(Source):
     """
@@ -49,6 +56,9 @@ class CaspioSource(Source):
     avoid_frontpage = models.BooleanField(default=False)
     calculated_source_type = models.CharField(max_length=255, blank=True, default='')
     table_name= models.CharField(max_length=250)
+    id_field_name=models.IntegerField(blank=False,null=False)
+    url_field_name = models.URLField(verify_exists=False, blank=False)
+    video_title_field=models.CharField(max_length=250)
 
     class Meta:
         unique_together = (
@@ -74,26 +84,12 @@ class CaspioSource(Source):
         for i in self._update_items_generator(verbose, parsed_feed,
                                               clear_rejected):
             pass
+    
+    def get_wsdl(self):
+        return WSDL.Proxy(WSDL_URL)
+         
 
-    def _get_feed_urls(self):
-        '''You might think that self.feed_url is the feed we will fetch
-        during self.update_items(). That would be true, but...
-
-        YouTube provides two different URLs for video feed. They are supposed
-        to be equivalent, but sometimes videos show up in one but do not show
-        up in the other. So when doing update_items() on a YouTube feed, we
-        ask the backend to crawl both feed URLs.
-
-        It's pretty terrible, but that's life.'''
-        # Here is the YouTube-specific hack...
-        if (self.feed_url.startswith('http://gdata.youtube.com/') and
-            'v=2' in self.feed_url and
-            'orderby=published' in self.feed_url):
-            return [self.feed_url, self.feed_url.replace('orderby=published', '')]
-        return [self.feed_url]
-
-    def _update_items_generator(self, verbose=False, parsed_feed=None,
-                                clear_rejected=False, actually_save_thumbnails=True):
+    def _update_items_generator(self, verbose=False, clear_rejected=False, actually_save_thumbnails=True):
         """
         Fetch and import new videos from this field.  After each imported
         video, we yield a dictionary:
@@ -102,18 +98,13 @@ class CaspioSource(Source):
          'video': the Video object we just imported
         }
         """
-        if parsed_feed is None:
-            for feed_url in self._get_feed_urls():
-                individual_parsed_feeds = []
-                data = util.http_get(feed_url)
-                individual_parsed_feeds.append(feedparser.parse(data))
-            parsed_feed = vidscraper.bulk_import.util.join_feeds(
-                individual_parsed_feeds)
 
-        for index, entry in enumerate(parsed_feed['entries'][::-1]):
-            yield self._handle_one_bulk_import_feed_entry(index, parsed_feed, entry, verbose=verbose, clear_rejected=clear_rejected, actually_save_thumbnails=actually_save_thumbnails)
+        
+        wsdl = self.get_wsdl()
+        for entry in wsdl.SelectData(ACCOUNT_ID,PROFILEID, PASSWORD, self.table_name ,False, (self.id_field_name, self.url_field_name, self.last_updated, self.video_title_name), 'id'):
+            yield self._handle_one_bulk_import_feed_entry(wsdl, entry, verbose=verbose, clear_rejected=clear_rejected, actually_save_thumbnails=actually_save_thumbnails)
 
-        self._mark_bulk_import_as_done(parsed_feed)
+        self._mark_bulk_import_as_done(wsdl)
 
     def default_video_status(self):
         # Check that if we want to add an active
@@ -123,13 +114,12 @@ class CaspioSource(Source):
             initial_video_status = VIDEO_STATUS_UNAPPROVED
         return initial_video_status
 
-    def _handle_one_bulk_import_feed_entry(self, index, parsed_feed, entry, verbose, clear_rejected,
-                                           actually_save_thumbnails=True):
+    def _handle_one_bulk_import_feed_entry(self, wsdl, entry, verbose, clear_rejected,
+                                           actually_save_thumbnails=True):# seems that we can deal with it without wsdl 
         def skip(reason):
             if verbose:
                 print "Skipping %s: %s" % (entry['title'], reason)
-            return {'index': index,
-                   'total': len(parsed_feed.entries),
+            return {'total': len(wsdl.entries),
                    'video': None,
                    'skip': reason}
 
@@ -159,7 +149,7 @@ class CaspioSource(Source):
                 return skip('duplicate link')
 
         video_data = {
-            'name': unescape(entry['title']),
+            'name': self.video_title_name,
             'guid': guid,
             'site': self.site,
             'description': '',
@@ -173,7 +163,7 @@ class CaspioSource(Source):
                 self.auto_approve and datetime.datetime.now() or None),
             'status': initial_video_status,
             'when_published': None,
-            'feed': self,
+            #'feed': self,
             'website_url': link}
 
         tags = []
