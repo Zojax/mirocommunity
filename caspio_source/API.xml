@@ -1,0 +1,1133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://bridge.caspio.net/ws" xmlns:s1="http://bridge.caspio.net/ws/literalTypes" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://bridge.caspio.net/ws" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Caspio Bridge Web Service API</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://bridge.caspio.net/ws">
+      <s:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+      <s:import namespace="http://schemas.xmlsoap.org/wsdl/" />
+      <s:complexType name="ArrayOfString">
+        <s:complexContent mixed="false">
+          <s:restriction base="soapenc:Array">
+            <s:attribute wsdl:arrayType="s:string[]" ref="soapenc:arrayType" />
+          </s:restriction>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="CaspioBridgeDataResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Row" type="tns:CaspioBridgeTableRow" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CaspioBridgeTableRow">
+        <s:sequence>
+          <s:any maxOccurs="unbounded" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://bridge.caspio.net/ws/literalTypes">
+      <s:import namespace="http://bridge.caspio.net/ws" />
+      <s:element name="GetTableDesign">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AccountID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Profile" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TableName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTableDesignResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTableDesignResult" type="s1:CaspioBridgeTable" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CaspioBridgeTable">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Table" type="s1:ArrayOfCaspioBridgeTableColumn" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfCaspioBridgeTableColumn">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Column" type="s1:CaspioBridgeTableColumn" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CaspioBridgeTableColumn">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Type" type="s1:CaspioBridgeColumnType" />
+          <s:element minOccurs="1" maxOccurs="1" name="Unique" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="Description" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="CaspioBridgeColumnType">
+        <s:restriction base="s:string">
+          <s:enumeration value="LongText" />
+          <s:enumeration value="ShortText" />
+          <s:enumeration value="Number" />
+          <s:enumeration value="AutoNumber" />
+          <s:enumeration value="Integer" />
+          <s:enumeration value="Currency" />
+          <s:enumeration value="Date/Time" />
+          <s:enumeration value="Yes/No" />
+          <s:enumeration value="File" />
+          <s:enumeration value="Timestamp" />
+          <s:enumeration value="Password" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="CreateTable">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AccountID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Profile" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TableName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TableSchema" type="s1:CaspioBridgeTable" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CreateTableResponse">
+        <s:complexType />
+      </s:element>
+      <s:element name="ListObjects">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AccountID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Profile" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListObjectsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CaspioBridgeResponse" type="s1:ListResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ListResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CaspioBridgeObject" type="s1:CaspioBridgeObject" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CaspioBridgeObject">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Type" type="s1:ObjectType" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Privilege" type="s1:PrivilegeEnumType" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="ObjectType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Table" />
+          <s:enumeration value="View" />
+          <s:enumeration value="DataPage" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="PrivilegeEnumType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Manage" />
+          <s:enumeration value="Select" />
+          <s:enumeration value="Insert" />
+          <s:enumeration value="Update" />
+          <s:enumeration value="Delete" />
+          <s:enumeration value="Design" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="ListDataPages">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AccountID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Profile" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListDataPagesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CaspioBridgeDataPageResponse" type="s1:DataPageListResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DataPageListResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="DataPage" type="s1:CaspioBridgeDataPage" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CaspioBridgeDataPage">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Type" type="s1:ObjectType" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Privilege" type="s1:PrivilegeEnumType" />
+          <s:element minOccurs="0" maxOccurs="1" name="AppKey" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Folder" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="AppType" type="s1:DataPageAppTypes" />
+          <s:element minOccurs="1" maxOccurs="1" name="Deployment" type="s1:DataPageDeploymentStatus" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="DataPageAppTypes">
+        <s:restriction base="s:string">
+          <s:enumeration value="Form" />
+          <s:enumeration value="Table" />
+          <s:enumeration value="Report" />
+          <s:enumeration value="SearchReport" />
+          <s:enumeration value="HTMLPage" />
+          <s:enumeration value="PasswordRecovery" />
+          <s:enumeration value="MobileForm" />
+          <s:enumeration value="Calendar" />
+          <s:enumeration value="Chart" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="DataPageDeploymentStatus">
+        <s:restriction base="s:string">
+          <s:enumeration value="Undeployed" />
+          <s:enumeration value="Deployed" />
+          <s:enumeration value="HTTPS_Only" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="SelectData">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AccountID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Profile" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ObjectName" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IsView" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="FieldList" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Criteria" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="OrderBy" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SelectDataResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SelectDataResult" type="tns:CaspioBridgeDataResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="SelectDataRawSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="ObjectName" type="s:string" />
+    <wsdl:part name="IsView" type="s:boolean" />
+    <wsdl:part name="FieldList" type="s:string" />
+    <wsdl:part name="Criteria" type="s:string" />
+    <wsdl:part name="OrderBy" type="s:string" />
+    <wsdl:part name="FieldDelimiter" type="s:string" />
+    <wsdl:part name="StringDelimiter" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SelectDataRawSoapOut">
+    <wsdl:part name="SelectDataRawResult" type="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="SelectDataXMLSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="ObjectName" type="s:string" />
+    <wsdl:part name="IsView" type="s:boolean" />
+    <wsdl:part name="FieldList" type="s:string" />
+    <wsdl:part name="Criteria" type="s:string" />
+    <wsdl:part name="OrderBy" type="s:string" />
+    <wsdl:part name="IsSchema" type="s:boolean" />
+    <wsdl:part name="IsRaw" type="s:boolean" />
+    <wsdl:part name="IsElements" type="s:boolean" />
+    <wsdl:part name="IsBase64" type="s:boolean" />
+  </wsdl:message>
+  <wsdl:message name="SelectDataXMLSoapOut">
+    <wsdl:part name="SelectDataXMLResult" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="InsertDataSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="ObjectName" type="s:string" />
+    <wsdl:part name="IsView" type="s:boolean" />
+    <wsdl:part name="FieldList" type="s:string" />
+    <wsdl:part name="ValueList" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="InsertDataSoapOut">
+    <wsdl:part name="InsertDataResult" type="s:int" />
+  </wsdl:message>
+  <wsdl:message name="UpdateDataSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="ObjectName" type="s:string" />
+    <wsdl:part name="IsView" type="s:boolean" />
+    <wsdl:part name="FieldList" type="s:string" />
+    <wsdl:part name="ValueList" type="s:string" />
+    <wsdl:part name="Criteria" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpdateDataSoapOut">
+    <wsdl:part name="UpdateDataResult" type="s:int" />
+  </wsdl:message>
+  <wsdl:message name="UpdatePasswordFieldSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="TableName" type="s:string" />
+    <wsdl:part name="FieldName" type="s:string" />
+    <wsdl:part name="NewPassword" type="s:string" />
+    <wsdl:part name="Criteria" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpdatePasswordFieldSoapOut">
+    <wsdl:part name="UpdatePasswordFieldResult" type="s:int" />
+  </wsdl:message>
+  <wsdl:message name="ResetPasswordFieldSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="TableName" type="s:string" />
+    <wsdl:part name="FieldName" type="s:string" />
+    <wsdl:part name="Criteria" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ResetPasswordFieldSoapOut">
+    <wsdl:part name="ResetPasswordFieldResult" type="s:int" />
+  </wsdl:message>
+  <wsdl:message name="DeleteDataSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="ObjectName" type="s:string" />
+    <wsdl:part name="IsView" type="s:boolean" />
+    <wsdl:part name="Criteria" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DeleteDataSoapOut">
+    <wsdl:part name="DeleteDataResult" type="s:int" />
+  </wsdl:message>
+  <wsdl:message name="CreateEmptyTableSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="TableName" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CreateEmptyTableSoapOut" />
+  <wsdl:message name="AddTableFieldSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="TableName" type="s:string" />
+    <wsdl:part name="FieldName" type="s:string" />
+    <wsdl:part name="Type" type="s:string" />
+    <wsdl:part name="Unique" type="s:boolean" />
+    <wsdl:part name="Description" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AddTableFieldSoapOut" />
+  <wsdl:message name="DropTableFieldSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="TableName" type="s:string" />
+    <wsdl:part name="FieldName" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DropTableFieldSoapOut" />
+  <wsdl:message name="AlterTableFieldSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="TableName" type="s:string" />
+    <wsdl:part name="FieldName" type="s:string" />
+    <wsdl:part name="NewFieldName" type="s:string" />
+    <wsdl:part name="NewType" type="s:string" />
+    <wsdl:part name="NewUnique" type="s:string" />
+    <wsdl:part name="NewDescription" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AlterTableFieldSoapOut" />
+  <wsdl:message name="GetFieldPropertySoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="TableName" type="s:string" />
+    <wsdl:part name="FieldName" type="s:string" />
+    <wsdl:part name="PropertyName" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetFieldPropertySoapOut">
+    <wsdl:part name="GetFieldPropertyResult" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SetFieldPropertySoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="TableName" type="s:string" />
+    <wsdl:part name="FieldName" type="s:string" />
+    <wsdl:part name="PropertyName" type="s:string" />
+    <wsdl:part name="PropertyValue" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SetFieldPropertySoapOut" />
+  <wsdl:message name="GetTableDesignRawSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="TableName" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTableDesignRawSoapOut">
+    <wsdl:part name="GetTableDesignRawResult" type="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="GetTableDesignSoapIn">
+    <wsdl:part name="parameters" element="s1:GetTableDesign" />
+  </wsdl:message>
+  <wsdl:message name="GetTableDesignSoapOut">
+    <wsdl:part name="parameters" element="s1:GetTableDesignResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateTableSoapIn">
+    <wsdl:part name="parameters" element="s1:CreateTable" />
+  </wsdl:message>
+  <wsdl:message name="CreateTableSoapOut">
+    <wsdl:part name="parameters" element="s1:CreateTableResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListObjectsSoapIn">
+    <wsdl:part name="parameters" element="s1:ListObjects" />
+  </wsdl:message>
+  <wsdl:message name="ListObjectsSoapOut">
+    <wsdl:part name="parameters" element="s1:ListObjectsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ProximitySearchByCoordinatesRawSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="ObjectName" type="s:string" />
+    <wsdl:part name="IsView" type="s:boolean" />
+    <wsdl:part name="Latitude" type="s:double" />
+    <wsdl:part name="Longitude" type="s:double" />
+    <wsdl:part name="LatitudeField" type="s:string" />
+    <wsdl:part name="LongitudeField" type="s:string" />
+    <wsdl:part name="ProximityCriteria" type="s:string" />
+    <wsdl:part name="Units" type="s:int" />
+    <wsdl:part name="FieldList" type="s:string" />
+    <wsdl:part name="AdditionalCriteria" type="s:string" />
+    <wsdl:part name="OrderBy" type="s:string" />
+    <wsdl:part name="IncludeCalculatedDistance" type="s:boolean" />
+    <wsdl:part name="FieldDelimiter" type="s:string" />
+    <wsdl:part name="StringDelimiter" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ProximitySearchByCoordinatesRawSoapOut">
+    <wsdl:part name="ProximitySearchByCoordinatesRawResult" type="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="ProximitySearchByCoordinatesSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="ObjectName" type="s:string" />
+    <wsdl:part name="IsView" type="s:boolean" />
+    <wsdl:part name="Latitude" type="s:double" />
+    <wsdl:part name="Longitude" type="s:double" />
+    <wsdl:part name="LatitudeField" type="s:string" />
+    <wsdl:part name="LongitudeField" type="s:string" />
+    <wsdl:part name="ProximityCriteria" type="s:string" />
+    <wsdl:part name="Units" type="s:int" />
+    <wsdl:part name="FieldList" type="s:string" />
+    <wsdl:part name="AdditionalCriteria" type="s:string" />
+    <wsdl:part name="OrderBy" type="s:string" />
+    <wsdl:part name="IncludeCalculatedDistance" type="s:boolean" />
+    <wsdl:part name="IsSchema" type="s:boolean" />
+    <wsdl:part name="IsRaw" type="s:boolean" />
+    <wsdl:part name="IsElements" type="s:boolean" />
+    <wsdl:part name="IsBase64" type="s:boolean" />
+  </wsdl:message>
+  <wsdl:message name="ProximitySearchByCoordinatesSoapOut">
+    <wsdl:part name="ProximitySearchByCoordinatesResult" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ProximitySearchByReferenceRawSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="ObjectName" type="s:string" />
+    <wsdl:part name="IsView" type="s:boolean" />
+    <wsdl:part name="Latitude" type="s:double" />
+    <wsdl:part name="Longitude" type="s:double" />
+    <wsdl:part name="SearchField" type="s:string" />
+    <wsdl:part name="RefObject" type="s:string" />
+    <wsdl:part name="RefIsView" type="s:boolean" />
+    <wsdl:part name="RefField" type="s:string" />
+    <wsdl:part name="RefLatitudeField" type="s:string" />
+    <wsdl:part name="RefLongitudeField" type="s:string" />
+    <wsdl:part name="ProximityCriteria" type="s:string" />
+    <wsdl:part name="Units" type="s:int" />
+    <wsdl:part name="FieldList" type="s:string" />
+    <wsdl:part name="AdditionalCriteria" type="s:string" />
+    <wsdl:part name="OrderBy" type="s:string" />
+    <wsdl:part name="IncludeCalculatedDistance" type="s:boolean" />
+    <wsdl:part name="FieldDelimiter" type="s:string" />
+    <wsdl:part name="StringDelimiter" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ProximitySearchByReferenceRawSoapOut">
+    <wsdl:part name="ProximitySearchByReferenceRawResult" type="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="ProximitySearchByReferenceSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="ObjectName" type="s:string" />
+    <wsdl:part name="IsView" type="s:boolean" />
+    <wsdl:part name="Latitude" type="s:double" />
+    <wsdl:part name="Longitude" type="s:double" />
+    <wsdl:part name="SearchField" type="s:string" />
+    <wsdl:part name="RefObject" type="s:string" />
+    <wsdl:part name="RefIsView" type="s:boolean" />
+    <wsdl:part name="RefField" type="s:string" />
+    <wsdl:part name="RefLatitudeField" type="s:string" />
+    <wsdl:part name="RefLongitudeField" type="s:string" />
+    <wsdl:part name="ProximityCriteria" type="s:string" />
+    <wsdl:part name="Units" type="s:int" />
+    <wsdl:part name="FieldList" type="s:string" />
+    <wsdl:part name="AdditionalCriteria" type="s:string" />
+    <wsdl:part name="OrderBy" type="s:string" />
+    <wsdl:part name="IncludeCalculatedDistance" type="s:boolean" />
+    <wsdl:part name="IsSchema" type="s:boolean" />
+    <wsdl:part name="IsRaw" type="s:boolean" />
+    <wsdl:part name="IsElements" type="s:boolean" />
+    <wsdl:part name="IsBase64" type="s:boolean" />
+  </wsdl:message>
+  <wsdl:message name="ProximitySearchByReferenceSoapOut">
+    <wsdl:part name="ProximitySearchByReferenceResult" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDataPageAppKeySoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Folder" type="s:string" />
+    <wsdl:part name="DataPageName" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDataPageAppKeySoapOut">
+    <wsdl:part name="GetDataPageAppKeyResult" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDataPageDeploymentStatusSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="AppKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetDataPageDeploymentStatusSoapOut">
+    <wsdl:part name="GetDataPageDeploymentStatusResult" type="s:unsignedByte" />
+  </wsdl:message>
+  <wsdl:message name="GetDataPageDeploymentCodeSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="AppKey" type="s:string" />
+    <wsdl:part name="DeployMethod" type="s:string" />
+    <wsdl:part name="Https" type="s:boolean" />
+  </wsdl:message>
+  <wsdl:message name="GetDataPageDeploymentCodeSoapOut">
+    <wsdl:part name="GetDataPageDeploymentCodeResult" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DeployDataPageSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="AppKey" type="s:string" />
+    <wsdl:part name="HttpsOnly" type="s:boolean" />
+  </wsdl:message>
+  <wsdl:message name="DeployDataPageSoapOut" />
+  <wsdl:message name="UndeployDataPageSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="AppKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UndeployDataPageSoapOut" />
+  <wsdl:message name="ListDataPagesRawSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="ExtraInfo" type="s:boolean" />
+  </wsdl:message>
+  <wsdl:message name="ListDataPagesRawSoapOut">
+    <wsdl:part name="ListDataPagesRawResult" type="tns:ArrayOfString" />
+  </wsdl:message>
+  <wsdl:message name="ListDataPagesSoapIn">
+    <wsdl:part name="parameters" element="s1:ListDataPages" />
+  </wsdl:message>
+  <wsdl:message name="ListDataPagesSoapOut">
+    <wsdl:part name="parameters" element="s1:ListDataPagesResponse" />
+  </wsdl:message>
+  <wsdl:message name="CreateDataPageSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="Folder" type="s:string" />
+    <wsdl:part name="DataPageXML" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CreateDataPageSoapOut">
+    <wsdl:part name="CreateDataPageResult" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CreateViewSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="ViewXML" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CreateViewSoapOut" />
+  <wsdl:message name="ListFilesSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="FolderID" type="s:int" />
+    <wsdl:part name="IncludeSubfolders" type="s:boolean" />
+  </wsdl:message>
+  <wsdl:message name="ListFilesSoapOut">
+    <wsdl:part name="ListFilesResult" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DeleteFileSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="FileID" type="s:int" />
+  </wsdl:message>
+  <wsdl:message name="DeleteFileSoapOut" />
+  <wsdl:message name="DownloadFileSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="FileID" type="s:int" />
+  </wsdl:message>
+  <wsdl:message name="DownloadFileSoapOut">
+    <wsdl:part name="DownloadFileResult" type="s:base64Binary" />
+  </wsdl:message>
+  <wsdl:message name="DownloadFileByNameSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="FilePath" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DownloadFileByNameSoapOut">
+    <wsdl:part name="DownloadFileByNameResult" type="s:base64Binary" />
+  </wsdl:message>
+  <wsdl:message name="UploadFileSoapIn">
+    <wsdl:part name="AccountID" type="s:string" />
+    <wsdl:part name="Profile" type="s:string" />
+    <wsdl:part name="Password" type="s:string" />
+    <wsdl:part name="FileName" type="s:string" />
+    <wsdl:part name="FileData" type="s:base64Binary" />
+    <wsdl:part name="ContentType" type="s:string" />
+    <wsdl:part name="FolderID" type="s:int" />
+    <wsdl:part name="Overwrite" type="s:boolean" />
+  </wsdl:message>
+  <wsdl:message name="UploadFileSoapOut" />
+  <wsdl:message name="SelectDataSoapIn">
+    <wsdl:part name="parameters" element="s1:SelectData" />
+  </wsdl:message>
+  <wsdl:message name="SelectDataSoapOut">
+    <wsdl:part name="parameters" element="s1:SelectDataResponse" />
+  </wsdl:message>
+  <wsdl:portType name="CaspioBridgeAPISoap">
+    <wsdl:operation name="SelectDataRaw">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Select data from Caspio Bridge table or view</wsdl:documentation>
+      <wsdl:input message="tns:SelectDataRawSoapIn" />
+      <wsdl:output message="tns:SelectDataRawSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SelectDataXML">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Select data from Caspio Bridge table or view</wsdl:documentation>
+      <wsdl:input message="tns:SelectDataXMLSoapIn" />
+      <wsdl:output message="tns:SelectDataXMLSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="InsertData">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Insert one record to Caspio Bridge table or view</wsdl:documentation>
+      <wsdl:input message="tns:InsertDataSoapIn" />
+      <wsdl:output message="tns:InsertDataSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateData">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Update records in Caspio Bridge table or view</wsdl:documentation>
+      <wsdl:input message="tns:UpdateDataSoapIn" />
+      <wsdl:output message="tns:UpdateDataSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdatePasswordField">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Update password field value records in Caspio Bridge table</wsdl:documentation>
+      <wsdl:input message="tns:UpdatePasswordFieldSoapIn" />
+      <wsdl:output message="tns:UpdatePasswordFieldSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ResetPasswordField">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Reset password field</wsdl:documentation>
+      <wsdl:input message="tns:ResetPasswordFieldSoapIn" />
+      <wsdl:output message="tns:ResetPasswordFieldSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteData">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Delete records from Caspio Bridge table or view</wsdl:documentation>
+      <wsdl:input message="tns:DeleteDataSoapIn" />
+      <wsdl:output message="tns:DeleteDataSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateEmptyTable">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Create new empty Caspio Bridge table without fields</wsdl:documentation>
+      <wsdl:input message="tns:CreateEmptyTableSoapIn" />
+      <wsdl:output message="tns:CreateEmptyTableSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddTableField">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Add field to Caspio Bridge table</wsdl:documentation>
+      <wsdl:input message="tns:AddTableFieldSoapIn" />
+      <wsdl:output message="tns:AddTableFieldSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DropTableField">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Delete field from Caspio Bridge table</wsdl:documentation>
+      <wsdl:input message="tns:DropTableFieldSoapIn" />
+      <wsdl:output message="tns:DropTableFieldSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AlterTableField">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Alter field in Caspio Bridge table</wsdl:documentation>
+      <wsdl:input message="tns:AlterTableFieldSoapIn" />
+      <wsdl:output message="tns:AlterTableFieldSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetFieldProperty">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get value of field extended property</wsdl:documentation>
+      <wsdl:input message="tns:GetFieldPropertySoapIn" />
+      <wsdl:output message="tns:GetFieldPropertySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetFieldProperty">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Set value of field extended property</wsdl:documentation>
+      <wsdl:input message="tns:SetFieldPropertySoapIn" />
+      <wsdl:output message="tns:SetFieldPropertySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTableDesignRaw">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get design of Caspio Bridge table</wsdl:documentation>
+      <wsdl:input message="tns:GetTableDesignRawSoapIn" />
+      <wsdl:output message="tns:GetTableDesignRawSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTableDesign">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get design of Caspio Bridge table</wsdl:documentation>
+      <wsdl:input message="tns:GetTableDesignSoapIn" />
+      <wsdl:output message="tns:GetTableDesignSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateTable">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Create new Caspio Bridge table</wsdl:documentation>
+      <wsdl:input message="tns:CreateTableSoapIn" />
+      <wsdl:output message="tns:CreateTableSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListObjects">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">List all accessible Caspio Bridge tables and views</wsdl:documentation>
+      <wsdl:input message="tns:ListObjectsSoapIn" />
+      <wsdl:output message="tns:ListObjectsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ProximitySearchByCoordinatesRaw">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Perform proximity search by coordinates</wsdl:documentation>
+      <wsdl:input message="tns:ProximitySearchByCoordinatesRawSoapIn" />
+      <wsdl:output message="tns:ProximitySearchByCoordinatesRawSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ProximitySearchByCoordinates">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Perform proximity search by coordinates</wsdl:documentation>
+      <wsdl:input message="tns:ProximitySearchByCoordinatesSoapIn" />
+      <wsdl:output message="tns:ProximitySearchByCoordinatesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ProximitySearchByReferenceRaw">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Perform proximity search by reference</wsdl:documentation>
+      <wsdl:input message="tns:ProximitySearchByReferenceRawSoapIn" />
+      <wsdl:output message="tns:ProximitySearchByReferenceRawSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ProximitySearchByReference">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Perform proximity search by reference</wsdl:documentation>
+      <wsdl:input message="tns:ProximitySearchByReferenceSoapIn" />
+      <wsdl:output message="tns:ProximitySearchByReferenceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDataPageAppKey">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get AppKey of the DataPage</wsdl:documentation>
+      <wsdl:input message="tns:GetDataPageAppKeySoapIn" />
+      <wsdl:output message="tns:GetDataPageAppKeySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDataPageDeploymentStatus">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get DataPage deployment status</wsdl:documentation>
+      <wsdl:input message="tns:GetDataPageDeploymentStatusSoapIn" />
+      <wsdl:output message="tns:GetDataPageDeploymentStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDataPageDeploymentCode">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get DataPage deployment code</wsdl:documentation>
+      <wsdl:input message="tns:GetDataPageDeploymentCodeSoapIn" />
+      <wsdl:output message="tns:GetDataPageDeploymentCodeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeployDataPage">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Deploy DataPage</wsdl:documentation>
+      <wsdl:input message="tns:DeployDataPageSoapIn" />
+      <wsdl:output message="tns:DeployDataPageSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UndeployDataPage">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Undeploy DataPage</wsdl:documentation>
+      <wsdl:input message="tns:UndeployDataPageSoapIn" />
+      <wsdl:output message="tns:UndeployDataPageSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListDataPagesRaw">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">List available DataPages</wsdl:documentation>
+      <wsdl:input message="tns:ListDataPagesRawSoapIn" />
+      <wsdl:output message="tns:ListDataPagesRawSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListDataPages">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">List available DataPages</wsdl:documentation>
+      <wsdl:input message="tns:ListDataPagesSoapIn" />
+      <wsdl:output message="tns:ListDataPagesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateDataPage">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Create new DataPage</wsdl:documentation>
+      <wsdl:input message="tns:CreateDataPageSoapIn" />
+      <wsdl:output message="tns:CreateDataPageSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateView">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Create new view</wsdl:documentation>
+      <wsdl:input message="tns:CreateViewSoapIn" />
+      <wsdl:output message="tns:CreateViewSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListFiles">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">List files</wsdl:documentation>
+      <wsdl:input message="tns:ListFilesSoapIn" />
+      <wsdl:output message="tns:ListFilesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteFile">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Delete file</wsdl:documentation>
+      <wsdl:input message="tns:DeleteFileSoapIn" />
+      <wsdl:output message="tns:DeleteFileSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DownloadFile">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Download file</wsdl:documentation>
+      <wsdl:input message="tns:DownloadFileSoapIn" />
+      <wsdl:output message="tns:DownloadFileSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DownloadFileByName">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Download file by name</wsdl:documentation>
+      <wsdl:input message="tns:DownloadFileByNameSoapIn" />
+      <wsdl:output message="tns:DownloadFileByNameSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UploadFile">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Upload file</wsdl:documentation>
+      <wsdl:input message="tns:UploadFileSoapIn" />
+      <wsdl:output message="tns:UploadFileSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SelectData">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Select data from Caspio Bridge table or view</wsdl:documentation>
+      <wsdl:input message="tns:SelectDataSoapIn" />
+      <wsdl:output message="tns:SelectDataSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CaspioBridgeAPISoap" type="tns:CaspioBridgeAPISoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <wsdl:operation name="SelectDataRaw">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/SelectDataRaw" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SelectDataXML">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/SelectDataXML" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="InsertData">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/InsertData" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateData">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/UpdateData" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdatePasswordField">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/UpdatePasswordField" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ResetPasswordField">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/ResetPasswordField" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteData">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/DeleteData" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateEmptyTable">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/CreateEmptyTable" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddTableField">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/AddTableField" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DropTableField">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/DropTableField" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AlterTableField">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/AlterTableField" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFieldProperty">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/GetFieldProperty" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetFieldProperty">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/SetFieldProperty" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTableDesignRaw">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/GetTableDesignRaw" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTableDesign">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/GetTableDesign" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateTable">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/CreateTable" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListObjects">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/ListObjects" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProximitySearchByCoordinatesRaw">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/ProximitySearchByCoordinatesRaw" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProximitySearchByCoordinates">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/ProximitySearchByCoordinates" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProximitySearchByReferenceRaw">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/ProximitySearchByReferenceRaw" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProximitySearchByReference">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/ProximitySearchByReference" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDataPageAppKey">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/GetDataPageAppKey" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDataPageDeploymentStatus">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/GetDataPageDeploymentStatus" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetDataPageDeploymentCode">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/GetDataPageDeploymentCode" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeployDataPage">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/DeployDataPage" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UndeployDataPage">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/UndeployDataPage" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListDataPagesRaw">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/ListDataPagesRaw" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListDataPages">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/ListDataPages" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateDataPage">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/CreateDataPage" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateView">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/CreateView" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListFiles">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/ListFiles" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteFile">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/DeleteFile" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownloadFile">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/DownloadFile" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownloadFileByName">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/DownloadFileByName" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadFile">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/UploadFile" style="rpc" />
+      <wsdl:input>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="encoded" namespace="http://bridge.caspio.net/ws" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SelectData">
+      <soap:operation soapAction="http://bridge.caspio.net/ws/SelectData" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CaspioBridgeAPI">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Caspio Bridge Web Service API</wsdl:documentation>
+    <wsdl:port name="CaspioBridgeAPISoap" binding="tns:CaspioBridgeAPISoap">
+      <soap:address location="http://bridge.caspio.net/ws/API.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

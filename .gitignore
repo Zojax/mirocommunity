@@ -1,3 +1,14 @@
 *.pyc
 Miro_Community.egg-info/*
 docs/build/*
+.DS_Store
+/bin
+.Python
+/lib
+/share
+/src
+/include
+/*.db
+/.*project
+/media
+/project/local_settings.py
