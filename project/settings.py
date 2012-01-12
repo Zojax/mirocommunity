@@ -10,7 +10,7 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'localtv.db'             # Or path to database file if using sqlite3.
+DATABASE_NAME = 'localtv.sqlite'             # Or path to database file if using sqlite3.
 DATABASE_USER = ''             # Not used with sqlite3.
 DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
@@ -194,12 +194,13 @@ FORCE_LOWERCASE_TAGS = True
 
 # celery
 CELERY_ALWAYS_EAGER = True # for debugging
+
 #BROKER_HOST = 'localhost'
 #BROKER_PORT = 5672
 #BROKER_USER = 'celery'
 #BROKER_PASSWORD = 'testing'
 #BROKER_VHOST = '/'
-CELERY_BACKEND = 'cache' # this MUST be set, otherwise the import page won't be
+#CELERY_BACKEND = 'cache' # this MUST be set, otherwise the import page won't be
                          # able to figure out if the task has ended
 
 # haystack search
