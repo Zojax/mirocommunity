@@ -17,6 +17,8 @@
 
 from django.conf.urls.defaults import patterns, include
 
+from caspio_source.views import CaspioFeed
+
 urlpatterns = patterns(
     'localtv.views',
     (r'^$', 'index', {}, 'localtv_index'),
@@ -59,6 +61,11 @@ urlpatterns += patterns(
     (r'^share/', include('email_share.urls')),
     (r'^widgets/', include('localtv.widgets.urls')),
     (r'^playlists/', include('localtv.playlists.urls')))
+
+urlpatterns += patterns(
+    'caspio_source.views',
+    (r'^feeds/caspio/(?P<table_name>\w+)/$', CaspioFeed(), {}, 'caspio_feed')
+)
 
 try:
     import voting

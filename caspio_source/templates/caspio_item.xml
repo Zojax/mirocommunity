@@ -1,0 +1,18 @@
+<item>
+    <title>
+        {{ title }}
+    </title>
+    <pubDate>{{ pub_date }}</pubDate>
+    <link>
+    {{ post_link }}
+    </link>
+    <source url="http://media.river-valley.tv/conferences/blender_conference_2008/video.xml"/>
+    <itunes:duration>00:33:32</itunes:duration>
+    <itunes:explicit>no</itunes:explicit>
+    <itunes:block>no</itunes:block>
+    <itunes:author>{{ author }}</itunes:author>
+    <guid>
+    http://media.river-valley.tv/conferences/blender_conference_2008/0201-Claudio_Andaur.mp4
+    </guid>
+    <enclosure url="http://media.river-valley.tv/conferences/blender_conference_2008/0201-Claudio_Andaur.mp4" length="37525588" type="video/mp4"/>
+</item>

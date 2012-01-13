@@ -756,6 +756,11 @@ class Feed(Source):
     def get_absolute_url(self):
         return ('localtv_list_feed', [self.pk])
 
+
+#    def save(self, *args, **kwargs):
+#        saved = super(Feed, self).save(self, *args, **kwargs)
+
+
     def update_items(self, verbose=False, parsed_feed=None,
                      clear_rejected=False):
         """

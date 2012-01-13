@@ -1,4 +1,11 @@
+### -*- coding: utf-8 -*- ####################################################
+
+import re
+
 from django.db import models
+from django.db.models.signals import post_save
+
+from django.utils.translation import ugettext_lazy as _
 
 from localtv.models import *
 from SOAPpy import WSDL
@@ -9,12 +16,62 @@ CASPIO_SOURCE_STATUS_REJECTED = VIDEO_STATUS_REJECTED
 CASPIO_SOURCE_STATUS_PENDING_THUMBNAIL = VIDEO_STATUS_PENDING_THUMBNAIL
 
 ACCOUNT_ID ='plat4m'
-PROFILEID = 'Dean_Powers'
-PASSWORD='dean12345'
+PROFILEID = 'RSS_FEED'
+PASSWORD='q6sapqnqxLt5'
 
 CASPIO_SOURCE_STATUSES=VIDEO_STATUSES
 
-WSDL_URL="http://bridge.caspio.net/ws/API.asmx?wsdl"
+WSDL_URL="https://b3.caspio.com/ws/api.asmx?wsdl"
+
+def get_wsdl(wsdl_url=WSDL_URL):
+    return WSDL.Proxy(wsdl_url)
+
+#wsdl.SelectData(ACCOUNT_ID,PROFILEID, PASSWORD, self.table_name ,False, (self.id_field_name, self.url_field_name, self.last_updated, self.video_title_name), 'id')
+
+
+CASPIO_FEED_RE = re.compile(r'.+feeds/caspio/(?P<table_name>\w+)')
+
+class CaspioData(models.Model):
+    """
+    Model required for storing feed info like ID of last retrieved object in
+
+    appropriate Caspio table.
+
+    Fields:
+        * table_name - Caspio table name;
+
+        * last_id - ID of last fetched object;
+
+        * last_updated - Date and time of last table retrieving;
+        
+    """
+
+    table_name = models.CharField(verbose_name=_(u"Caspio table"), max_length=100, unique=True)
+
+    last_id = models.IntegerField(verbose_name=_(u"Last object ID"), default=0)
+
+    last_updated = models.DateTimeField(verbose_name=_(u"Last Updated"), auto_now=True, auto_add_now=True)
+
+    class Meta:
+        verbose_name = _(u"Caspio Data item")
+        verbose_name_plural = _(u"Caspit Data items")
+
+    def __unicode__(self):
+
+        return _(u"Last object ID from '%s' table is %s" % (self.table_name, self.last_id))
+
+
+def track_fetch(sender=None, instance=None, created=False, *args, **kwargs):
+    """
+    Let's create CaspioData entry when feed with appropriate url added
+    """
+    if created:
+        caspio_match = CASPIO_FEED_RE.search(instance.feed_url)
+        if caspio_match:
+            cd, created = CaspioData.objects.get_or_create(table_name = caspio_match.group("table_name"))
+
+post_save.connect(track_fetch, sender=Feed)
+
  
 class CaspioSource(Source):
     """
@@ -27,7 +84,7 @@ class CaspioSource(Source):
       - table_name : name of the table to select from
       - id_field_name : name of the required field
       - url_field_name : url where video situated
-      - video_title_field_name: human readable name of the video 
+      - video_title_field: human readable name of the video
       - site: which site this feed belongs to
       - name: human readable name for this source
       - webpage: webpage that this feed\'s content is associated with
