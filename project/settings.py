@@ -113,7 +113,8 @@ INSTALLED_APPS = (
     'socialauth',
     'openid_consumer',
     'paypal',
-    'caspio_source'
+    'caspio_source',
+    'django_concurrent_test_server'
 )
 
 try:

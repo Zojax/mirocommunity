@@ -43,3 +43,6 @@ xapian-haystack
 django-voting
 eventlet
 -e git+http://github.com/pelletier/SOAPpy.git@develop#egg=SOAPpy
+
+-e git+git://github.com/jaylett/django_concurrent_test_server.git#egg=django_concurrent_test_server
+suds==0.4
