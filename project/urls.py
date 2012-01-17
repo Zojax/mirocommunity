@@ -14,7 +14,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with Miro Community.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.conf.urls.defaults import patterns, include
+from django.conf.urls.defaults import patterns, include, url
+from django.conf import settings
 
 def get_localtv_path(sub_path):
     import os
@@ -31,3 +32,9 @@ urlpatterns = patterns('',
                        (r'', include('localtv.urls')),
                        )
 
+#if settings.DEBUG:
+urlpatterns += patterns('',
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+        'document_root': settings.MEDIA_ROOT,
+    }),
+)

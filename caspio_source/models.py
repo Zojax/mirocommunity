@@ -27,10 +27,10 @@ WSDL_URL="https://b3.caspio.com/ws/api.asmx?wsdl"
 CASPIO_COMMON_FIELDS_MAP = (
     ("title", "BusinessName"),
     ("description", None),
-    ("link", "WebsiteURL"),
+    ("link", "PageURL"),
     ("id", "PK_ID"),
     ("author", "BusinessAuthor"),
-    ("enclosure_url", "VideoLinks"),
+    ("enclosure_url", "VideoURL"),
     ("enclosure_length", None),
     ("enclosure_mime", None),
     ("pubdate", "Updated"),
