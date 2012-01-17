@@ -225,4 +225,14 @@ TWITTER_CONSUMER_KEY = None
 TWITTER_CONSUMER_SECRET = None
 PAYPAL_RECEIVER_EMAIL = 'paypal@some.com'
 
-from local_settings import *
+# Caspio.com account
+
+CASPIO_ACCOUNT_ID = u'put_your_accout_id'
+CASPIO_PROFILEID = u'put_your_profile_id'
+CASPIO_PASSWORD= u'put_your_password'
+
+
+try:
+    from local_settings import *
+except:
+    pass

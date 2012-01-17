@@ -7,6 +7,7 @@ from django.db import models
 from django.db.models.signals import post_save
 
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
 from localtv.models import *
 from suds.client import Client
@@ -16,11 +17,14 @@ CASPIO_SOURCE_STATUS_ACTIVE = VIDEO_STATUS_ACTIVE
 CASPIO_SOURCE_STATUS_REJECTED = VIDEO_STATUS_REJECTED
 CASPIO_SOURCE_STATUS_PENDING_THUMBNAIL = VIDEO_STATUS_PENDING_THUMBNAIL
 
-ACCOUNT_ID = u'plat4m'
-PROFILEID = u'RSS_FEED'
-PASSWORD= u'hiFxU9zfFtr9'
+
 
 CASPIO_SOURCE_STATUSES=VIDEO_STATUSES
+
+
+CASPIO_ACCOUNT_ID = settings.getattr("CASPIO_ACCOUNT_ID", None)
+CASPIO_PROFILE_ID = settings.getattr("CASPIO_PROFILE_ID", None)
+CASPIO_PASSWORD = settings.getattr("CASPIO_PASSWORD", None)
 
 WSDL_URL="https://b3.caspio.com/ws/api.asmx?wsdl"
 
@@ -49,7 +53,7 @@ def fetch_caspio_data(table_name, last_id, mapping=CASPIO_COMMON_FIELDS_MAP):
     """
 
     wsdl = get_wsdl()
-    query_result = wsdl.service.SelectData(ACCOUNT_ID, PROFILEID, PASSWORD,
+    query_result = wsdl.service.SelectData(CASPIO_ACCOUNT_ID, CASPIO_PROFILE_ID, CASPIO_PASSWORD,
                             table_name, False,
                             "*",#(self.id_field_name, self.url_field_name, self.last_updated, self.video_title_name)
                             "PK_ID>%s" % last_id, "PK_ID")
