@@ -39,8 +39,8 @@ def fetch_feed(feed):
     if feed.etag:
         req.add_header('If-None-Match', feed.etag)
     try:
-	handle = urllib2.urlopen(req)
-    except urllib2.HTTPError:
+        handle = urllib2.urlopen(req)
+    except (urllib2.HTTPError, urllib2.URLError):
         return (None, None, None)
     return feed, handle.info().getheader('ETag'), handle.read()
     

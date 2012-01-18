@@ -1,5 +1,6 @@
 # Example settings for a Miro Community project
-import os
+import os, sys
+from datetime import timedelta
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
 
@@ -14,7 +15,7 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'localtv.sqlite'             # Or path to database file if using sqlite3.
+DATABASE_NAME = os.path.join(PROJECT_ROOT, 'localtv.sqlite')             # Or path to database file if using sqlite3.
 DATABASE_USER = ''             # Not used with sqlite3.
 DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
@@ -228,7 +229,7 @@ PAYPAL_RECEIVER_EMAIL = 'paypal@some.com'
 # Caspio.com account
 
 CASPIO_ACCOUNT_ID = u'put_your_accout_id'
-CASPIO_PROFILEID = u'put_your_profile_id'
+CASPIO_PROFILE_ID = u'put_your_profile_id'
 CASPIO_PASSWORD= u'put_your_password'
 
 
@@ -236,3 +237,14 @@ try:
     from local_settings import *
 except:
     pass
+
+#CELERYBEAT_SCHEDULE = {
+#    "runs-every-30-seconds": {
+#        "task": "tasks.check_call",
+#        "schedule": timedelta(seconds=30),
+#        "args": (PYTHON_EXECUTABLE or sys.executable,
+#                 os.path.join(os.path.dirname(__file__), 'manage.py'),
+#                 'update_index'),
+#        "kwargs": {"env": {'DJANGO_SETTINGS_MODULE': "project.settings"}}
+#    },
+#}
