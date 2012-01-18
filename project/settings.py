@@ -1,7 +1,7 @@
 # Example settings for a Miro Community project
 import os
 
-PROJECT_ROOT = os.path.join(os.path.abspath(os.path.dirname(__file__)), '../')
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
 
 
 DEBUG = True
@@ -211,7 +211,7 @@ CELERY_ALWAYS_EAGER = True # for debugging
 # haystack search
 HAYSTACK_SITECONF = 'project.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'whoosh'
-HAYSTACK_WHOOSH_PATH = 'whoosh_index'
+HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_ROOT, 'whoosh_index')
 
 # Facebook options
 FACEBOOK_APP_ID = None
