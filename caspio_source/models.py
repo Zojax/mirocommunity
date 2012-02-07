@@ -7,30 +7,35 @@ from django.db import models
 from django.db.models.signals import post_save
 
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
 from localtv.models import *
 from suds.client import Client
+from suds import WebFault
 
 CASPIO_SOURCE_STATUS_UNAPPROVED = VIDEO_STATUS_UNAPPROVED
 CASPIO_SOURCE_STATUS_ACTIVE = VIDEO_STATUS_ACTIVE
 CASPIO_SOURCE_STATUS_REJECTED = VIDEO_STATUS_REJECTED
 CASPIO_SOURCE_STATUS_PENDING_THUMBNAIL = VIDEO_STATUS_PENDING_THUMBNAIL
 
-ACCOUNT_ID = u'plat4m'
-PROFILEID = u'RSS_FEED'
-PASSWORD= u'hiFxU9zfFtr9'
+
 
 CASPIO_SOURCE_STATUSES=VIDEO_STATUSES
+
+
+CASPIO_ACCOUNT_ID = getattr(settings, "CASPIO_ACCOUNT_ID", None)
+CASPIO_PROFILE_ID = getattr(settings, "CASPIO_PROFILE_ID", None)
+CASPIO_PASSWORD = getattr(settings, "CASPIO_PASSWORD", None)
 
 WSDL_URL="https://b3.caspio.com/ws/api.asmx?wsdl"
 
 CASPIO_COMMON_FIELDS_MAP = (
     ("title", "BusinessName"),
     ("description", None),
-    ("link", "WebsiteURL"),
+    ("link", "PageURL"),
     ("id", "PK_ID"),
     ("author", "BusinessAuthor"),
-    ("enclosure_url", "VideoLinks"),
+    ("enclosure_url", "VideoURL"),
     ("enclosure_length", None),
     ("enclosure_mime", None),
     ("pubdate", "Updated"),
@@ -49,28 +54,33 @@ def fetch_caspio_data(table_name, last_id, mapping=CASPIO_COMMON_FIELDS_MAP):
     """
 
     wsdl = get_wsdl()
-    query_result = wsdl.service.SelectData(ACCOUNT_ID, PROFILEID, PASSWORD,
-                            table_name, False,
-                            "*",#(self.id_field_name, self.url_field_name, self.last_updated, self.video_title_name)
-                            "PK_ID>%s" % last_id, "PK_ID")
+    try:
+        query_result = wsdl.service.SelectData(CASPIO_ACCOUNT_ID, CASPIO_PROFILE_ID, CASPIO_PASSWORD,
+                                table_name, False,
+                                "*",#(self.id_field_name, self.url_field_name, self.last_updated, self.video_title_name)
+                                "PK_ID>%s" % last_id, "PK_ID")
+    except WebFault,err:
+        print err
+        query_result = None
     itms = []
-    for i in query_result.Row:
-        itm = {}
-        for k,v in mapping:
-            itm[k] = getattr(i, v)[0] if v else v
+    if query_result is not None:
+        for i in query_result.Row:
+            itm = {}
+            for k,v in mapping:
+                itm[k] = getattr(i, v)[0] if v else v
 
-        # Need to fill content-type and length
-        # But can take additional time
-#        if itm["enclosure_length"] is None and itm["enclosure_mime"] is None\
-#        and itm["enclosure_url"] is not None:
-#            try:
-#                item_info = urllib2.urlopen(itm["enclosure_url"])
-#                itm["enclosure_mime"] = item_info.headers.get("Content-Type", None)
-#                itm["enclosure_length"] = item_info.headers.get("Content-Length", None)
-#            except:
-#                pass
+            # Need to fill content-type and length
+            # But can take additional time
+    #        if itm["enclosure_length"] is None and itm["enclosure_mime"] is None\
+    #        and itm["enclosure_url"] is not None:
+    #            try:
+    #                item_info = urllib2.urlopen(itm["enclosure_url"])
+    #                itm["enclosure_mime"] = item_info.headers.get("Content-Type", None)
+    #                itm["enclosure_length"] = item_info.headers.get("Content-Length", None)
+    #            except:
+    #                pass
 
-        itms.append(itm)
+            itms.append(itm)
 
     return itms
 

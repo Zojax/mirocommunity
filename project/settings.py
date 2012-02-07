@@ -1,4 +1,9 @@
 # Example settings for a Miro Community project
+import os, sys
+from datetime import timedelta
+
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '../'))
+
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -10,7 +15,7 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'localtv.sqlite'             # Or path to database file if using sqlite3.
+DATABASE_NAME = os.path.join(PROJECT_ROOT, 'localtv.sqlite')             # Or path to database file if using sqlite3.
 DATABASE_USER = ''             # Not used with sqlite3.
 DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
@@ -35,17 +40,17 @@ USE_I18N = False
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = 'media'
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media/')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = '/'
+MEDIA_URL = '/media/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/media/'
+ADMIN_MEDIA_PREFIX = '/amedia/'
 
 STATIC_URL = '/'
 
@@ -207,7 +212,7 @@ CELERY_ALWAYS_EAGER = True # for debugging
 # haystack search
 HAYSTACK_SITECONF = 'project.search_sites'
 HAYSTACK_SEARCH_ENGINE = 'whoosh'
-HAYSTACK_WHOOSH_PATH = 'whoosh_index'
+HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_ROOT, 'whoosh_index')
 
 # Facebook options
 FACEBOOK_APP_ID = None
@@ -221,4 +226,25 @@ TWITTER_CONSUMER_KEY = None
 TWITTER_CONSUMER_SECRET = None
 PAYPAL_RECEIVER_EMAIL = 'paypal@some.com'
 
-from local_settings import *
+# Caspio.com account
+
+CASPIO_ACCOUNT_ID = u'put_your_accout_id'
+CASPIO_PROFILE_ID = u'put_your_profile_id'
+CASPIO_PASSWORD= u'put_your_password'
+
+
+try:
+    from local_settings import *
+except:
+    pass
+
+#CELERYBEAT_SCHEDULE = {
+#    "runs-every-30-seconds": {
+#        "task": "tasks.check_call",
+#        "schedule": timedelta(seconds=30),
+#        "args": (PYTHON_EXECUTABLE or sys.executable,
+#                 os.path.join(os.path.dirname(__file__), 'manage.py'),
+#                 'update_index'),
+#        "kwargs": {"env": {'DJANGO_SETTINGS_MODULE': "project.settings"}}
+#    },
+#}

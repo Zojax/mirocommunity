@@ -16,6 +16,7 @@
 # along with Miro Community.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.conf.urls.defaults import patterns, include
+from django.conf import settings
 
 from caspio_source.views import CaspioFeed
 
