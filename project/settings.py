@@ -200,6 +200,7 @@ FORCE_LOWERCASE_TAGS = True
 
 # celery
 CELERY_ALWAYS_EAGER = True # for debugging
+CELERYBEAT_SCHEDULE_FILENAME = "/tmp/celerybeat-schedule"
 
 #BROKER_HOST = 'localhost'
 #BROKER_PORT = 5672
