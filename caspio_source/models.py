@@ -63,7 +63,7 @@ def fetch_caspio_data(table_name, last_id, mapping=CASPIO_COMMON_FIELDS_MAP):
         print err
         query_result = None
     itms = []
-    if query_result is not None:
+    if query_result:
         for i in query_result.Row:
             itm = {}
             for k,v in mapping:
