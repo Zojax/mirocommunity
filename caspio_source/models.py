@@ -118,7 +118,7 @@ class CaspioData(models.Model):
 
     def __unicode__(self):
 
-        return _(u"Last object ID from '%s' table is %s" % (self.table_name, self.last_id))
+        return _(u"Last object ID from '%s' table is %s" % (str(self.table_name), str(self.last_id)))
 
 
 def track_feed(sender=None, instance=None, created=False, *args, **kwargs):
